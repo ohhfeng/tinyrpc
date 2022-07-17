@@ -2,7 +2,6 @@ syntax = "proto3";
 
 option objc_class_prefix = "HLW";
 option go_package = "/helloworld";
-package helloworld;
 
 // The greeting service definition.
 service Greeter {
