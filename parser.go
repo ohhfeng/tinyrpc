@@ -21,7 +21,7 @@ const (
 // +---------------+-------------+-------------+-------------+-------------+
 // | length | name |length|      |length|      |length|      |length|      |
 // +---------------+-------------+-------------+-------------+-------------+
-// response可以在msg之前
+//一元rpc模式没有msg
 
 func SendMetaData(w io.Writer, m metadata) error {
 	header := prepareLen([]byte(m.methodName))

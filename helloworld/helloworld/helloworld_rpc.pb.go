@@ -40,8 +40,12 @@ func HelloWorldServerHanlder(ctx context.Context, srv interface{}, dec func(v in
 	return srv.(HelloWorldServerImpl).SayHello(ctx, req)
 }
 
+func ServiceName() string {
+	return "HelloWorld"
+}
+
 var serviceInfo = rpc.ServiceInfo{
-	ServiceName: "HelloWorld",
+	ServiceName: ServiceName(),
 	Methods: []*rpc.Method{
 		{
 			Name:    "SayHello",

@@ -2,14 +2,19 @@ package rpc
 
 import (
 	"context"
+	"github.com/google/uuid"
+	"github.com/ohhfeng/tinyRpc/balancer"
+	"github.com/ohhfeng/tinyRpc/balancer/consist"
 	"github.com/ohhfeng/tinyRpc/codec"
 	"github.com/ohhfeng/tinyRpc/codec/proto"
+	"github.com/ohhfeng/tinyRpc/registry"
 	"net"
 )
 
 type Conn struct {
 	conn      net.Conn
 	codecType string
+	id        string
 }
 
 func (c *Conn) Read(p []byte) (n int, err error) {
@@ -50,4 +55,20 @@ func Dail(address string) (*Conn, error) {
 		return nil, err
 	}
 	return &Conn{conn: conn}, err
+}
+
+func XDail(serviceName string, endpoint []string) (*Conn, error) {
+	discovery, err := registry.NewDiscovery(endpoint, serviceName, consist.Name)
+	if err != nil {
+		return nil, err
+	}
+	connId, err := uuid.NewUUID()
+	if err != nil {
+		return nil, err
+	}
+	info, err := discovery.Get(&balancer.Request{ClientId: connId.String()})
+	if err != nil {
+		return nil, err
+	}
+	return Dail(info.Addr())
 }
